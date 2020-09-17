@@ -68,11 +68,8 @@ class Service(UrlService):
         if configuration is None:
             configuration = {}
         configuration.setdefault('url', 'http://192.168.100.1/cmconnectionstatus.html')
-
         # My modem's status page takes several seconds to load, does yours?
-        self.request_timeout = 15
-
-        configuration.setdefault('update_every', 15)
+        configuration.setdefault('request_timeout', '15')
 
         super(Service, self).__init__(configuration=configuration, name=name)
 

@@ -69,11 +69,6 @@ class Service(UrlService):
             configuration = {}
         configuration.setdefault('url', 'http://192.168.100.1/cmconnectionstatus.html')
 
-        # Out of 100 curls the p50 the total_time metric was 8.7 seconds, so 20
-        # seconds is frequent enough to give useful data, but not so much so
-        # that it takes *too* long.
-        configuration.setdefault('update_every', 20)
-
         super(Service, self).__init__(configuration=configuration, name=name)
         # My modem's status page takes several seconds to load, does yours?
         self.request_timeout = 15

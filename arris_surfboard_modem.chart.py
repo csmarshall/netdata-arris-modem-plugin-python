@@ -71,7 +71,8 @@ class Service(UrlService):
 
         # My modem's status page takes several seconds to load, does yours?
         self.request_timeout = 15
-        configuration.setdefault('update_every', str(self.request_timeout))
+
+        configuration.setdefault('update_every', 15)
 
         super(Service, self).__init__(configuration=configuration, name=name)
 

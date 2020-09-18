@@ -1,13 +1,13 @@
 # netdata-arris-surfboard-modem-plugin-python
-netdata python.d collector for Arris Surfboard Modem downstream/upstream stats
+netdata python.d collector for Arris Surfboard DOCSIS Cable Modem downstream/upstream stats
 
 ## To install:
-This script scrapes the private 192.168.100.1 cmconnectionstatus.html page exposed on your cable modem, if you should need to do any configuration more than simply copying (or symlinking if your OS supports it) the script into place
+This script scrapes the private admin interface of 192.168.100.1/cmconnectionstatus.html exposed on the cable modem, if you should need to do any configuration more than simply copying (or symlinking if your OS supports it) the script into place
 1. Stop netdata, OS Specific:
 ```zsh
 user@netdata:/usr/www/netdata % sudo service netdata stop
 Password:
-netdata not stopped.
+netdata stopped.
 user@netdata:/usr/www/netdata %
 ```
 
@@ -30,31 +30,32 @@ user@netdata:~ % cd /usr/www/netdata
 
 4. Symlink the charts script from your checkout from the checked out repo *into* your netdata install:
 ```zsh
-user@netdata:/usr/www/netdata % sudo ln -s ~/netdata-arris-surfboard-modem-plugin-python/arris_surfboard_modem.chart.py ./usr/libexec/netdata/python.d/arris_surfboard_modem.chart.py
+user@netdata:/usr/www/netdata % sudo ln -s ~/netdata-arris-surfboard-plugin-python/arris_surfboard.chart.py ./usr/libexec/netdata/python.d/arris_surfboard.chart.py
 Password:
-user@netdata:/usr/www/netdata % ls -la ./usr/libexec/netdata/python.d/arris_surfboard_modem.chart.py
-lrwxr-xr-x 1 root daemon 78 Sep 17 15:05 ./usr/libexec/netdata/python.d/arris_surfboard_modem.chart.py -> /home/user/netdata-arris-surfboard-modem-plugin-python/arris_surfboard_modem.chart.py
+user@netdata:/usr/www/netdata % ls -la ./usr/libexec/netdata/python.d/arris_surfboard.chart.py
+lrwxr-xr-x 1 root daemon 78 Sep 17 15:05 ./usr/libexec/netdata/python.d/arris_surfboard.chart.py -> /home/user/netdata-arris-surfboard-modem-plugin-python/arris_surfboard.chart.py
 ```
 
 5. OPTIONAL?: Symlink the stub config into place:
 ```zsh
-user@netdata:/usr/www/netdata % sudo ln -sf ~/work/netdata-arris-surfboard-modem-plugin-python/arris_surfboard_modem.conf ./usr/lib/netdata/conf.d/python.d/arris_surfboard_modem.conf
+user@netdata:/usr/www/netdata % sudo ln -sf ~/work/netdata-arris-surfboard-modem-plugin-python/arris_surfboard.conf ./usr/lib/netdata/conf.d/python.d/arris_surfboard.conf
 Password:
-user@netdata:/usr/www/netdata % ls -la ./usr/lib/netdata/conf.d/python.d/arris_surfboard_modem.conf
-lrwxr-xr-x 1 root netdata 86 Sep 17 15:11 ./usr/lib/netdata/conf.d/python.d/arris_surfboard_modem.conf -> /home/user/work/netdata-arris-surfboard-modem-plugin-python/arris_surfboard_modem.conf
+user@netdata:/usr/www/netdata % ls -la ./usr/lib/netdata/conf.d/python.d/arris_surfboard.conf
+lrwxr-xr-x 1 root netdata 86 Sep 17 15:11 ./usr/lib/netdata/conf.d/python.d/arris_surfboard.conf -> /home/user/work/netdata-arris-surfboard-modem-plugin-python/arris_surfboard.conf
 ```
 Then edit the config if you so choose:
 ```zsh
 user@netdata:/usr/www/netdata % cd etc/netdata
-user@netdata:/usr/www/netdata/etc/netdata %  sudo ./edit-config python.d/arris_surfboard_modem.conf
+user@netdata:/usr/www/netdata/etc/netdata %  sudo ./edit-config python.d/arris_surfboard.conf
 ```
+The only real variable here is the "update_every", which will work to emit a metric every X seconds, my modem takes 9 seconds to respond, so the default "update_every" for the script is 15, with the connect timing out being 3 seconds before.  That way I can update as quickly as possible, with a little buffer added to deal with being nice'd by the OS' scheduler.
 
 6. Test that the plugin works for your modem:
 ```zsh
-user@netdata:/usr/www/netdata/etc/netdata % sudo -u netdata /bin/bash /usr/www/netdata/usr/libexec/netdata/plugins.d/python.d.plugin arris_surfboard_modem debug trace
+user@netdata:/usr/www/netdata/etc/netdata % sudo -u netdata /bin/bash /usr/www/netdata/usr/libexec/netdata/plugins.d/python.d.plugin arris_surfboard debug trace
 Password:
 ```
-This will update to the console, an example is given in example_debug_output.txt
+This will update to the console, an example is given in examples/debug_output.txt
 
 
 7. Restart netdata, obviously this is OS specific:
@@ -69,7 +70,6 @@ user@netdata:/usr/www/netdata %
 8. Profit 😎
 
 
-
 ## Notes:
 * This is for the [Arris Surfboard Family]|(https://www.arris.com/surfboard/products/cable-modems/) family of DOCSIS Cable Modems, I tested with the [SB8200]|(https://www.arris.com/surfboard/products/cable-modems/sb8200/) but I have a loose memory of this similar UI existing in previous generations, and possibly even legacy Motorola surfboard devices, though there might need to be some slight modifications due to HTML changes.
 * If you're looking for other Arris cable modem products you may want to look at @theY4Kman's [plugin]|(https://github.com/theY4Kman/netdata-arris-modem-plugin-python), it was the starting point for this script, and hopefully should work if your modem exposes a "cgi-bin" style status page.
@@ -78,7 +78,7 @@ user@netdata:/usr/www/netdata %
 % for A in {1..100}; do echo "${A},$(curl -w '%{time_total}\n' -o /dev/null -s http://192.168.100.1/cmconnectionstatus.html)" ; done | recs fromcsv -k run,time | recs collate -a p50_time=perc,50,time
 {"p50_time":"8.797505"}
 ```
-As a result, I've increase the default interval to 20 seconds to be safe, with a 15 second timeout, you may want to tweak it, but for me this seems like a happy medium, as far as I know there's no impact to the dataplane of the modem from querying these stats so frequently.
+As a result, I've increase the default interval to 15 seconds to be safe, but you may want to tweak it, but for me this seems like a happy medium, as far as I know there's no impact to the dataplane of the modem from querying these stats so frequently.
 
 ## Todo:
 * ~~Instructions to install~~

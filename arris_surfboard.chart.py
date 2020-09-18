@@ -6,6 +6,8 @@ from bases.FrameworkServices.UrlService import UrlService
 
 priority = 90000
 
+update_every = 15
+
 CHARTS = {
     'downstream_frequency': {
         'options': [None, 'Frequency', 'mHz', 'Downstream', 'arris_surfboard.downstream_frequency', 'line'],
@@ -69,7 +71,7 @@ class Service(UrlService):
             configuration = {}
         configuration.setdefault('url', 'http://192.168.100.1/cmconnectionstatus.html')
         # My modem's status page takes several seconds to load, does yours?
-        configuration.setdefault('request_timeout', '15')
+        configuration.setdefault('timeout', (update_every - 2))
 
         super(Service, self).__init__(configuration=configuration, name=name)
 
@@ -77,7 +79,6 @@ class Service(UrlService):
         self.definitions = deepcopy(CHARTS)
 
     def create_definitions(self, num_streams=0):
-        self.debug(self.definitions)
         for chart in self.definitions.values():
             lines = chart['lines']
             line_tmpl = lines.pop()
@@ -156,10 +157,6 @@ class Service(UrlService):
 
         except (ValueError, AttributeError):
             self.debug("Unable to parse html rows")
-            return ()
-
-        except Exception as ex:
-            self.debug(f"Unhandled exeption: {ex}")
             return ()
 
     def _get_data(self):

@@ -71,8 +71,8 @@ user@netdata:/usr/www/netdata %
 
 
 ## Notes:
-* This is for the [Arris Surfboard Family]|(https://www.arris.com/surfboard/products/cable-modems/) family of DOCSIS Cable Modems, I tested with the [SB8200]|(https://www.arris.com/surfboard/products/cable-modems/sb8200/) but I have a loose memory of this similar UI existing in previous generations, and possibly even legacy Motorola surfboard devices, though there might need to be some slight modifications due to HTML changes.
-* If you're looking for other Arris cable modem products you may want to look at @theY4Kman's [plugin]|(https://github.com/theY4Kman/netdata-arris-modem-plugin-python), it was the starting point for this script, and hopefully should work if your modem exposes a "cgi-bin" style status page.
+* This is for the [Arris Surfboard Family](https://www.arris.com/surfboard/products/cable-modems/) family of DOCSIS Cable Modems, I tested with the [SB8200](https://www.arris.com/surfboard/products/cable-modems/sb8200/) but I have a loose memory of this similar UI existing in previous generations, and possibly even legacy Motorola surfboard devices, though there might need to be some slight modifications due to HTML changes.
+* If you're looking for other Arris cable modem products you may want to look at @theY4Kman's [plugin](https://github.com/theY4Kman/netdata-arris-modem-plugin-python), it was the starting point for this script, and hopefully should work if your modem exposes a "cgi-bin" style status page.
 * My modem seems to have a roughly 9~ second delay when querying these stats:
 ```zsh
 % for A in {1..100}; do echo "${A},$(curl -w '%{time_total}\n' -o /dev/null -s http://192.168.100.1/cmconnectionstatus.html)" ; done | recs fromcsv -k run,time | recs collate -a p50_time=perc,50,time
@@ -81,7 +81,6 @@ user@netdata:/usr/www/netdata %
 As a result, I've increase the default interval to 15 seconds to be safe, but you may want to tweak it, but for me this seems like a happy medium, as far as I know there's no impact to the dataplane of the modem from querying these stats so frequently.
 
 ## Todo:
-* ~~Instructions to install~~
 * Possibly submit this upstream?
 * Add graph screenshots
 * Change the default icon in the UI?

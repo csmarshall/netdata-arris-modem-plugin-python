@@ -68,7 +68,7 @@ user@netdata:/usr/www/netdata %
 ```
 
 8. Profit 😎
-
+![Plugin Screenshot](/examples/Screen%20Shot%202020-09-17%20at%2021.26.10.png)
 
 ## Notes:
 * This is for the [Arris Surfboard Family](https://www.arris.com/surfboard/products/cable-modems/) family of DOCSIS Cable Modems, I tested with the [SB8200](https://www.arris.com/surfboard/products/cable-modems/sb8200/) but I have a loose memory of this similar UI existing in previous generations, and possibly even legacy Motorola surfboard devices, though there might need to be some slight modifications due to HTML changes.
@@ -82,6 +82,5 @@ As a result, I've increase the default interval to 15 seconds to be safe, but yo
 
 ## Todo:
 * Possibly submit this upstream?
-* Add graph screenshots
 * Change the default icon in the UI?
-* See if there's a way to reduce the interval.
+* See if there's a way to reduce the interval?

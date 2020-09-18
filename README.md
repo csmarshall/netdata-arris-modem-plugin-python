@@ -2,7 +2,7 @@
 netdata python.d collector for Arris Surfboard DOCSIS Cable Modem downstream/upstream stats
 
 ## To install:
-This script scrapes the private admin interface of 192.168.100.1/cmconnectionstatus.html exposed on the cable modem, if you should need to do any configuration more than simply copying (or symlinking if your OS supports it) the script into place
+This script scrapes the private admin interface of 192.168.100.1/cmconnectionstatus.html exposed on the cable modem, if your interface is compatible you shouldn't need to do any configuration more than simply copying (or symlinking if your OS supports it) the script into place
 1. Stop netdata, OS Specific:
 ```zsh
 user@netdata:/usr/www/netdata % sudo service netdata stop

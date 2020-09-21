@@ -2,7 +2,7 @@
 netdata python.d collector for Arris Surfboard DOCSIS Cable Modem downstream/upstream stats
 
 ## To install:
-This script scrapes the private admin interface of 192.168.100.1/cmconnectionstatus.html exposed on the cable modem, if you should need to do any configuration more than simply copying (or symlinking if your OS supports it) the script into place
+This script scrapes the private admin interface of 192.168.100.1/cmconnectionstatus.html exposed on the cable modem, if your interface is compatible you shouldn't need to do any configuration more than simply copying (or symlinking if your OS supports it) the script into place
 1. Stop netdata, OS Specific:
 ```zsh
 user@netdata:/usr/www/netdata % sudo service netdata stop
@@ -68,11 +68,11 @@ user@netdata:/usr/www/netdata %
 ```
 
 8. Profit 😎
-
+![Plugin Screenshot](/examples/Screen%20Shot%202020-09-17%20at%2021.26.10.png)
 
 ## Notes:
-* This is for the [Arris Surfboard Family]|(https://www.arris.com/surfboard/products/cable-modems/) family of DOCSIS Cable Modems, I tested with the [SB8200]|(https://www.arris.com/surfboard/products/cable-modems/sb8200/) but I have a loose memory of this similar UI existing in previous generations, and possibly even legacy Motorola surfboard devices, though there might need to be some slight modifications due to HTML changes.
-* If you're looking for other Arris cable modem products you may want to look at @theY4Kman's [plugin]|(https://github.com/theY4Kman/netdata-arris-modem-plugin-python), it was the starting point for this script, and hopefully should work if your modem exposes a "cgi-bin" style status page.
+* This is for the [Arris Surfboard Family](https://www.arris.com/surfboard/products/cable-modems/) family of DOCSIS Cable Modems, I tested with the [SB8200](https://www.arris.com/surfboard/products/cable-modems/sb8200/) but I have a loose memory of this similar UI existing in previous generations, and possibly even legacy Motorola surfboard devices, though there might need to be some slight modifications due to HTML changes.
+* If you're looking for other Arris cable modem products you may want to look at @theY4Kman's [plugin](https://github.com/theY4Kman/netdata-arris-modem-plugin-python), it was the starting point for this script, and hopefully should work if your modem exposes a "cgi-bin" style status page.
 * My modem seems to have a roughly 9~ second delay when querying these stats:
 ```zsh
 % for A in {1..100}; do echo "${A},$(curl -w '%{time_total}\n' -o /dev/null -s http://192.168.100.1/cmconnectionstatus.html)" ; done | recs fromcsv -k run,time | recs collate -a p50_time=perc,50,time
@@ -84,6 +84,5 @@ As a result, I've increase the default interval to 15 seconds to be safe, but yo
 ## Todo:
 * Alarms for modem uptime, or software changes?
 * Possibly submit this upstream?
-* Add graph screenshots
 * Change the default icon in the UI?
-* See if there's a way to reduce the interval.
+* See if there's a way to reduce the interval?

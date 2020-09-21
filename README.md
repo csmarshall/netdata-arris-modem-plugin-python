@@ -79,9 +79,10 @@ user@netdata:/usr/www/netdata %
 {"p50_time":"8.797505"}
 ```
 As a result, I've increase the default interval to 15 seconds to be safe, but you may want to tweak it, but for me this seems like a happy medium, as far as I know there's no impact to the dataplane of the modem from querying these stats so frequently.
+* I've added arris_surfboard_swinfo.chart.py to record the uptime and sofware revision of the modem in a seperate set of graphs (I didn't spend the time to get it into the same set of graphs)
 
 ## Todo:
-* ~~Instructions to install~~
+* Alarms for modem uptime, or software changes?
 * Possibly submit this upstream?
 * Add graph screenshots
 * Change the default icon in the UI?

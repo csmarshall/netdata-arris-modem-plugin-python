@@ -133,7 +133,7 @@ class Service(UrlService):
                                 channel = table_row[0].text
                                 channel_data = {
                                     'frequency': float(table_row[3].text.split(' ', 1)[0]) / 1000000,  # mHz
-                                    'power': float(table_row[4].text.split(' ', 1)[0]) * 10,  # dBmV
+                                    'power': float(table_row[4].text.split(' ', 1)[0]),  # dBmV
                                     'signal_to_noise': float(table_row[5].text.split(' ', 1)[0]),  # dB
                                     'corrected_errors': int(table_row[6].text),  # int
                                     'uncorrected_errors': int(table_row[7].text),  # int

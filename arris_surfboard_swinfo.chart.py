@@ -40,6 +40,9 @@ class Service(UrlService):
         self.debug(self.configuration)
         self.debug(f"self.request_timeout: {self.request_timeout}")
         self.definitions = deepcopy(CHARTS)
+        # Persist the last data value in case of failure to return the last
+        # value, instead of NaN
+        self.last_data = {}
 
         # Since we already defined an order in CHARTS? 🤷
         self.order = list(self.definitions)
@@ -119,12 +122,17 @@ class Service(UrlService):
         try:
             # Parse data from the URL
             data = self._get_data()
+            self.last_data = data
             # I create the deffinitions after pulling and parsing the data to
             # avoid having to query the UI twice.
+            self.debug(data)
 
         except Exception as error:
-            self.error('_get_data() failed. Url: {url}. Error: {error}'.format(url=self.url, error=error))
-            return False
+            self.error(f'_get_data() failed. Url: {self.url}. Error: {error}, returning {self.last_data}')
+            if self.last_data:
+                data = self.last_data
+            else:
+                return False
 
         if isinstance(data, dict) and data:
             return True

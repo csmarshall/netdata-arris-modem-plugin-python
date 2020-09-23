@@ -12,19 +12,19 @@ CHARTS = {
     'downstream_frequency': {
         'options': [None, 'Frequency', 'mHz', 'Downstream', 'arris_surfboard.downstream_frequency', 'line'],
         'lines': [
-            ['downstream_{n}_frequency', '{n}', 'absolute'],
+            ['downstream_{n}_frequency', '{n}', 'absolute', 1, 100],
         ],
     },
     'downstream_power': {
         'options': [None, 'Power', 'dBmV', 'Downstream', 'arris_surfboard.downstream_power', 'line'],
         'lines': [
-            ['downstream_{n}_power', '{n}', 'absolute'],
+            ['downstream_{n}_power', '{n}', 'absolute', 1, 100],
         ],
     },
     'downstream_signal_to_noise': {
         'options': [None, 'Signal to Noise', 'dB', 'Downstream', 'arris_surfboard.downstream_signal_to_noise', 'line'],
         'lines': [
-            ['downstream_{n}_signal_to_noise', '{n}', 'absolute'],
+            ['downstream_{n}_signal_to_noise', '{n}', 'absolute', 1, 10000],
         ],
     },
     'downstream_corrected_errors': {
@@ -42,19 +42,19 @@ CHARTS = {
     'upstream_frequency': {
         'options': [None, 'Frequency', 'mHz', 'Upstream', 'arris_surfboard.upstream_frequency', 'line'],
         'lines': [
-            ['upstream_{n}_frequency', '{n}', 'absolute'],
+            ['upstream_{n}_frequency', '{n}', 'absolute', 1, 100],
         ],
     },
     'upstream_width': {
         'options': [None, 'Width', 'mHz', 'Upstream', 'arris_surfboard.upstream_width', 'line'],
         'lines': [
-            ['upstream_{n}_width', '{n}', 'absolute'],
+            ['upstream_{n}_width', '{n}', 'absolute', 1, 100],
         ],
     },
     'upstream_power': {
         'options': [None, 'Power', 'dBmV', 'Upstream', 'arris_surfboard.upstream_power', 'line'],
         'lines': [
-            ['upstream_{n}_power', '{n}', 'absolute'],
+            ['upstream_{n}_power', '{n}', 'absolute', 1, 1000],
         ],
     }
 }
@@ -132,9 +132,9 @@ class Service(UrlService):
                             if direction == "down":
                                 channel = table_row[0].text
                                 channel_data = {
-                                    'frequency': float(table_row[3].text.split(' ', 1)[0]) / 1000000,  # mHz
-                                    'power': float(table_row[4].text.split(' ', 1)[0]),  # dBmV
-                                    'signal_to_noise': float(table_row[5].text.split(' ', 1)[0]),  # dB
+                                    'frequency': float(table_row[3].text.split(' ', 1)[0]) / 10000,  # mHz
+                                    'power': float(table_row[4].text.split(' ', 1)[0]) * 100,  # dBmV
+                                    'signal_to_noise': float(table_row[5].text.split(' ', 1)[0]) * 10000,  # dB
                                     'corrected_errors': int(table_row[6].text),  # int
                                     'uncorrected_errors': int(table_row[7].text),  # int
                                 }
@@ -145,9 +145,9 @@ class Service(UrlService):
                                 # id, since that seems more useful.
                                 channel = table_row[1].text
                                 channel_data = {
-                                    'frequency': float(table_row[4].text.split(' ', 1)[0]) / 1000000,  # mHz
-                                    'width': float(table_row[5].text.split(' ', 1)[0]) / 1000000,  # mHz
-                                    'power': float(table_row[6].text.split(' ', 1)[0]),  # dBmV
+                                    'frequency': float(table_row[4].text.split(' ', 1)[0]) / 10000,  # mHz
+                                    'width': float(table_row[5].text.split(' ', 1)[0]) / 10000,  # mHz
+                                    'power': float(table_row[6].text.split(' ', 1)[0]) * 1000,  # dBmV
                                 }
                             self.debug(f"{direction}stream channel: {channel} channel_data: {channel_data}")
                             stream_rows[direction][channel] = channel_data
